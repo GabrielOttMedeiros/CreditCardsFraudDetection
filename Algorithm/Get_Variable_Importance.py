@@ -228,11 +228,22 @@ def Getting_Best_Model(DTC_results, RFC_results, X, Y):
     ## Extracting the top-10 variables
     variables = variables.iloc[:, 0:n]
     
+    ## Removing variables with a zero importance
+    for i in range(0, n):
+        if (variables.loc[0, variables.columns[i]] != 0):
+            new_n = i + 1
+
+    variables = variables.iloc[:, 0:new_n]
+    
     ## Creating the final data set to be returned
     final_data = pd.DataFrame(columns = variables.columns)
     
     ## Keeping the ten most importance variables
+<<<<<<< HEAD
     for i in tqdm(range(0, n)):
+=======
+    for i in range(0, new_n):
+>>>>>>> d4068fcfc9d85f532a8ee6d8b3f37876f68e1787
         final_data.loc[:, final_data.columns[i]] = X.loc[:, final_data.columns[i]]
 
     ## Adding the Y values to the final data set
