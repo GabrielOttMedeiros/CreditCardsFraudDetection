@@ -1,12 +1,10 @@
+from sklearn.metrics import accuracy_score, recall_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 import EvaluateModels as cm
-
+import tensorflow as tf
 import pandas as pd
 import numpy as np
-from sklearn.metrics import accuracy_score, recall_score
-from sklearn.tree import DecisionTreeClassifier
-import HyperParameters as hp
-import tensorflow as tf
-from sklearn.ensemble import RandomForestClassifier
 import boto3
 
 ## defining bucket
@@ -64,10 +62,10 @@ SVC_best_model = cm.SvcBestModel(SVC_results)
 LR_results = cm.LogisticRegressionResults(X_test, X_train, Y_test, Y_train)
 
 ## AdaBoost Decision Trees
-ADA_DTC = cm.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, best_model)
+ADA_DTC = cm.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, DTC_best_model)
 
 ## AdaBoost SVC
-ADA_SVC= cm.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, best_model)
+ADA_SVC= cm.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
 
 ## GradientBoosting
 GBC_results = cm.GradientBoostingResults(X_test, X_train, Y_test, Y_train)

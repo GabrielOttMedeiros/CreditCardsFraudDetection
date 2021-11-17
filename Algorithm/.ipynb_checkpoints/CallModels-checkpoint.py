@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import accuracy_score, recall_score
 from sklearn.tree import DecisionTreeClassifier
-import HyperParameters as hp
 import tensorflow as tf
 from sklearn.ensemble import RandomForestClassifier
 import boto3
