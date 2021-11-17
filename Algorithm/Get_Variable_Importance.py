@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
@@ -49,7 +50,7 @@ def Extract_Decision_Tree_Importance(X, Y, data):
 
     n = data.shape[0]
 
-    for i in range(0, n):
+    for i in tqdm(range(0, n)):
 
         ## Defining empty lists to store model performance results
         accuracy_scores = []
@@ -149,7 +150,7 @@ def Extract_Random_Forest_Importance(X, Y, data):
 
     n = data.shape[0]
 
-    for i in range(0, n):
+    for i in tqdm(range(0, n)):
 
         ## Defining empty lists to store model performance results
         accuracy_scores = []
