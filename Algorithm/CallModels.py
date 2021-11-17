@@ -1,7 +1,7 @@
 from sklearn.metrics import accuracy_score, recall_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
-import EvaluateModels as cm
+import EvaluateModels as em
 import tensorflow as tf
 import pandas as pd
 import numpy as np
@@ -44,31 +44,31 @@ test_data = test_data.dropna()
 X_train, X_test,Y_train, Y_test = train_data.iloc[:,0:39], test_data.iloc[:,0:39], train_data['is_fraud'], test_data['is_fraud']
 
 ## Decision Trees
-DTC_results = cm.DecisionTreesResults(X_test, X_train, Y_test, Y_train)
-DTC_best_model = cm.DecisionTreesBestModel(DTC_results)
+DTC_results = em.DecisionTreesResults(X_test, X_train, Y_test, Y_train)
+DTC_best_model = em.DecisionTreesBestModel(DTC_results)
 
 ## Random Forest
-RF_results = cm.RandomForestResults(X_test, X_train, Y_test, Y_train)
-RF_best_model = cm.DecisionTreesBestModel(RF_results)
+RF_results = em.RandomForestResults(X_test, X_train, Y_test, Y_train)
+RF_best_model = em.DecisionTreesBestModel(RF_results)
 
 ## Neural Networks
-NN_results = cm. NeuralNetworksResults(X_test, X_train, Y_test, Y_train)
+NN_results = em. NeuralNetworksResults(X_test, X_train, Y_test, Y_train)
 
 ## SVC
-SVC_results = cm.SupportVectorMachineResults(X_test, X_train, Y_test, Y_train)
-SVC_best_model = cm.SvcBestModel(SVC_results)
+SVC_results = em.SupportVectorMachineResults(X_test, X_train, Y_test, Y_train)
+SVC_best_model = em.SvcBestModel(SVC_results)
 
 ## Logistic Regression
-LR_results = cm.LogisticRegressionResults(X_test, X_train, Y_test, Y_train)
+LR_results = em.LogisticRegressionResults(X_test, X_train, Y_test, Y_train)
 
 ## AdaBoost Decision Trees
-ADA_DTC = cm.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, DTC_best_model)
+ADA_DTC = em.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, DTC_best_model)
 
 ## AdaBoost SVC
-ADA_SVC= cm.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
+ADA_SVC= em.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
 
 ## GradientBoosting
-GBC_results = cm.GradientBoostingResults(X_test, X_train, Y_test, Y_train)
+GBC_results = em.GradientBoostingResults(X_test, X_train, Y_test, Y_train)
 
 
 
@@ -78,7 +78,7 @@ RF_results.to_csv('CreditCardsFraudDetection/Algorithm/RF_results.csv', index = 
 RF_best_model.to_csv('CreditCardsFraudDetection/Algorithm/RF_best_model.csv'n index = False)
 NN_results.to_csv('CreditCardsFraudDetection/Algorithm/NN_results.csv', index = False)
 SVC_results.to_csv('CreditCardsFraudDetection/Algorithm/SVC_results.csv', index = False)
-SVC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/SVC_best_model.csv'n index = False)
+SVC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/SVC_best_model.csv', index = False)
 LR_results.to_csv('CreditCardsFraudDetection/Algorithm/LR_results.csv', index = False)
 ADA_DTC.to_csv('CreditCardsFraudDetection/Algorithm/ADA_DTC.csv', index = False)
 ADA_SVC.to_csv('CreditCardsFraudDetection/Algorithm/ADA_SVC.csv', index = False)

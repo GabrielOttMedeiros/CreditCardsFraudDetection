@@ -90,13 +90,14 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
     
     NnInputParameters = hp.NeuralNetworksHyperParameters()
     
+    number_of_columns = len(X_train.columns)
     NN_results = pd.DataFrame()
     NN_n = NnInputParameters.shape[0]
 
     print('NeuralNetworks')
     for i in tqdm(range(0, NN_n)):
         NN_md = tf.keras.models.Sequential([     
-      tf.keras.layers.Dense(NnInputParameters.loc[i, 'number_of_neurons'], input_dim = NnInputParameters.loc[i, 'input_dim'], activation = NnInputParameters.loc[i,'activation']),
+      tf.keras.layers.Dense(NnInputParameters.loc[i, 'number_of_neurons'], input_dim = number_of_columns, activation = NnInputParameters.loc[i,'activation']),
           
       tf.keras.layers.Dense(NnInputParameters.loc[i, 'number_of_outputs'], activation = NnInputParameters.loc[i, 'activation2'])])
         
@@ -109,7 +110,6 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
         NN_preds = np.where(NN_preds < NnInputParameters.loc[i, 'cut_off'], 0, 1)
         
         NN_results.loc[i, 'number_of_neurons'] = NnInputParameters.loc[i, 'number_of_neurons']
-        NN_results.loc[i, 'input_dim'] = NnInputParameters.loc[i, 'input_dim']
         NN_results.loc[i, 'activation'] = NnInputParameters.loc[i, 'activation']
         NN_results.loc[i, 'number_of_outputs'] = NnInputParameters.loc[i, 'number_of_outputs']
         NN_results.loc[i, 'activation2'] = NnInputParameters.loc[i, 'activation2']
