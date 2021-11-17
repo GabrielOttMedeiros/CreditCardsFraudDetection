@@ -71,3 +71,18 @@ ADA_SVC= cm.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, best_model)
 
 ## GradientBoosting
 GBC_results = cm.GradientBoostingResults(X_test, X_train, Y_test, Y_train)
+
+
+
+DTC_results.to_csv('CreditCardsFraudDetection/Algorithm/DTC_results.csv', index = False)
+DTC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/DTC_best_model.csv', index = False)
+RF_results.to_csv('CreditCardsFraudDetection/Algorithm/RF_results.csv', index = False)
+RF_best_model.to_csv('CreditCardsFraudDetection/Algorithm/RF_best_model.csv'n index = False)
+NN_results.to_csv('CreditCardsFraudDetection/Algorithm/NN_results.csv', index = False)
+SVC_results.to_csv('CreditCardsFraudDetection/Algorithm/SVC_results.csv', index = False)
+SVC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/SVC_best_model.csv'n index = False)
+LR_results.to_csv('CreditCardsFraudDetection/Algorithm/LR_results.csv', index = False)
+ADA_DTC.to_csv('CreditCardsFraudDetection/Algorithm/ADA_DTC.csv', index = False)
+ADA_SVC.to_csv('CreditCardsFraudDetection/Algorithm/ADA_SVC.csv', index = False)
+GBC_results.to_csv('CreditCardsFraudDetection/Algorithm/GBC_results.csv', index = False)
+
