@@ -170,23 +170,20 @@ def SvcBestModel(SVC_results):
 ##########################
 
 def LogisticRegressionResults(X_test, X_train, Y_test, Y_train):
-    parameters = hp.LogisticRegressionParameters() 
-    LR_results = pd.DataFrame()
-    
-    n = parameters.shape[0]
-     
-    print('LogisticRegression')   
-    for i in tqdm(range(0, n)):                     
-        LR_md = LogisticRegression().fit(X_train,Y_train)
-        
-        for k in range(0,N):
-            
-            LR_preds = LR_md.predict_proba(X_test)[:,1]
-            LR_preds = np.where(LR_preds < cut_off_list[k],0,1)
 
-            LR_results.loc[k, 'cut_off'] = parameters[i]
-            LR_results.loc[k, 'accuracy'] = accuracy_score(Y_test,LR_preds)
-            LR_results.loc[k, 'recall'] = recall_score(Y_test, LR_preds)
+    LR_results = pd.DataFrame()
+       
+    LR_md = LogisticRegression().fit(X_train,Y_train)
+    
+    print('LogisticRegression')  
+    for k in tqdm(range(0,N)):       
+        
+        LR_preds = LR_md.predict_proba(X_test)[:,1]
+        LR_preds = np.where(LR_preds < cut_off_list[k],0,1)
+
+        LR_results.loc[k, 'cut_off'] = cut_off_list[k]
+        LR_results.loc[k, 'accuracy'] = accuracy_score(Y_test,LR_preds)
+        LR_results.loc[k, 'recall'] = recall_score(Y_test, LR_preds)
     LR_results['Performance'] = 2/(1/LR_results['accuracy'] + 1/LR_results['recall']) 
     
     return LR_results
