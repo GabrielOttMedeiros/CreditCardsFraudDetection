@@ -1,10 +1,6 @@
-from sklearn.metrics import accuracy_score, recall_score
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
-import EvaluateModels as em
-import tensorflow as tf
 import pandas as pd
 import numpy as np
+import EvaluateModels as em
 import boto3
 
 ## defining bucket
@@ -41,7 +37,31 @@ test_data = test_data.select_dtypes(exclude=['object'])
 train_data = train_data.dropna()
 test_data = test_data.dropna()
 
-X_train, X_test,Y_train, Y_test = train_data.iloc[:,0:39], test_data.iloc[:,0:39], train_data['is_fraud'], test_data['is_fraud']
+
+X_train, Y_train = train_data.drop(columns = 'is_fraud'), train_data['is_fraud']
+
+
+X = X_train
+Y = Y_train
+
+import Get_Variable_Importance as gvi
+
+print('DecisionTrees')
+decision_trees_variable_importance = gvi.Decision_Tree_Importance(X,Y)
+
+print('RandomForest')
+random_forest_variable_importance = gvi.Random_Forest_Importance(X,Y)
+
+print('ImportantVariables')
+df_importance_columns = gvi.Getting_Best_Model(decision_trees_variable_importance,random_forest_variable_importance,X,Y)
+
+
+X_test = test_data[df_importance_columns.drop(columns = 'is_fraud').columns]
+Y_test = test_data['is_fraud']
+
+X_train = train_data[df_importance_columns.drop(columns = 'is_fraud').columns]
+Y_train = train_data['is_fraud']
+
 
 ## Decision Trees
 DTC_results = em.DecisionTreesResults(X_test, X_train, Y_test, Y_train)
@@ -71,11 +91,10 @@ ADA_SVC= em.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
 GBC_results = em.GradientBoostingResults(X_test, X_train, Y_test, Y_train)
 
 
-
 DTC_results.to_csv('CreditCardsFraudDetection/Algorithm/DTC_results.csv', index = False)
 DTC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/DTC_best_model.csv', index = False)
 RF_results.to_csv('CreditCardsFraudDetection/Algorithm/RF_results.csv', index = False)
-RF_best_model.to_csv('CreditCardsFraudDetection/Algorithm/RF_best_model.csv'n index = False)
+RF_best_model.to_csv('CreditCardsFraudDetection/Algorithm/RF_best_model.csv', index = False)
 NN_results.to_csv('CreditCardsFraudDetection/Algorithm/NN_results.csv', index = False)
 SVC_results.to_csv('CreditCardsFraudDetection/Algorithm/SVC_results.csv', index = False)
 SVC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/SVC_best_model.csv', index = False)
@@ -83,4 +102,3 @@ LR_results.to_csv('CreditCardsFraudDetection/Algorithm/LR_results.csv', index = 
 ADA_DTC.to_csv('CreditCardsFraudDetection/Algorithm/ADA_DTC.csv', index = False)
 ADA_SVC.to_csv('CreditCardsFraudDetection/Algorithm/ADA_SVC.csv', index = False)
 GBC_results.to_csv('CreditCardsFraudDetection/Algorithm/GBC_results.csv', index = False)
-
