@@ -17,6 +17,8 @@ N = len(cut_off_list)
 ## Decision Trees ##
 ####################
 def DecisionTreesResults(X_test, X_train, Y_test, Y_train):
+    
+    list_results = []
 
     DTC_results = pd.DataFrame()
     DTC_n = hp.DecisionTreesHyperParameters().shape[0]
@@ -28,11 +30,10 @@ def DecisionTreesResults(X_test, X_train, Y_test, Y_train):
         for k in range(0,N):            
             DTC_preds = DTC.predict_proba(X_test)[:,1]
             DTC_preds = np.where(DTC_preds < cut_off_list[k],0,1)
+            
+            list_results.append([hp.DecisionTreesHyperParameters().loc[i,'max_depth'],cut_off_list[k],accuracy_score(Y_test,DTC_preds),recall_score(Y_test, DTC_preds)])
 
-            DTC_results.loc[k, 'max_depth'] = hp.DecisionTreesHyperParameters().loc[i, 'max_depth']
-            DTC_results.loc[k, 'cut_off'] = cut_off_list[k]
-            DTC_results.loc[k, 'accuracy'] = accuracy_score(Y_test,DTC_preds)
-            DTC_results.loc[k, 'recall'] = recall_score(Y_test, DTC_preds)
+            DTC_results = pd.DataFrame(columns = ['max_depth','cut_off','accuracy','recall'], data = list_results)
         
     DTC_results['Performance'] = 2/(1/DTC_results['accuracy'] + 1/DTC_results['recall'])   
 
@@ -170,23 +171,20 @@ def SvcBestModel(SVC_results):
 ##########################
 
 def LogisticRegressionResults(X_test, X_train, Y_test, Y_train):
-    parameters = hp.LogisticRegressionParameters() 
-    LR_results = pd.DataFrame()
-    
-    n = parameters.shape[0]
-     
-    print('LogisticRegression')   
-    for i in tqdm(range(0, n)):                     
-        LR_md = LogisticRegression().fit(X_train,Y_train)
-        
-        for k in range(0,N):
-            
-            LR_preds = LR_md.predict_proba(X_test)[:,1]
-            LR_preds = np.where(LR_preds < cut_off_list[k],0,1)
 
-            LR_results.loc[k, 'cut_off'] = parameters[i]
-            LR_results.loc[k, 'accuracy'] = accuracy_score(Y_test,LR_preds)
-            LR_results.loc[k, 'recall'] = recall_score(Y_test, LR_preds)
+    LR_results = pd.DataFrame()
+       
+    LR_md = LogisticRegression().fit(X_train,Y_train)
+    
+    print('LogisticRegression')  
+    for k in tqdm(range(0,N)):       
+        
+        LR_preds = LR_md.predict_proba(X_test)[:,1]
+        LR_preds = np.where(LR_preds < cut_off_list[k],0,1)
+
+        LR_results.loc[k, 'cut_off'] = cut_off_list[k]
+        LR_results.loc[k, 'accuracy'] = accuracy_score(Y_test,LR_preds)
+        LR_results.loc[k, 'recall'] = recall_score(Y_test, LR_preds)
     LR_results['Performance'] = 2/(1/LR_results['accuracy'] + 1/LR_results['recall']) 
     
     return LR_results
