@@ -34,7 +34,7 @@ def DecisionTreesResults(X_test, X_train, Y_test, Y_train):
             DTC_results.loc[k, 'accuracy'] = accuracy_score(Y_test,DTC_preds)
             DTC_results.loc[k, 'recall'] = recall_score(Y_test, DTC_preds)
         
-    DTC_results['Performance'] = ((DTC_results['accuracy'] + DTC_results['recall'])/2)    
+    DTC_results['Performance'] = 2/(1/DTC_results['accuracy'] + 1/DTC_results['recall'])   
 
     return DTC_results
 
@@ -73,7 +73,7 @@ def RandomForestResults(X_test, X_train, Y_test, Y_train):
             RF_results.loc[k, 'accuracy'] = accuracy_score(Y_test,RF_preds)
             RF_results.loc[k, 'recall'] = recall_score(Y_test, RF_preds)
         
-    RF_results['Performance'] = ((RF_results['accuracy'] + RF_results['recall'])/2)
+    RF_results['Performance'] = 2/(1/RF_results['accuracy'] + 1/RF_results['recall']) 
     
     return RF_results
 
@@ -124,7 +124,7 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
             NN_results.loc[k, 'accuracy'] = accuracy_score(Y_test,NN_preds)
             NN_results.loc[k, 'recall'] = recall_score(Y_test, NN_preds)
         
-    NN_results['Performance'] = (NeuralNetworkResults['accuracy'] + NeuralNetworkResults['recall'])/2
+    NN_results['Performance'] = 2/(1/NN_results['accuracy'] + 1/NN_results['recall']) 
     
     
     return NN_results
@@ -152,7 +152,7 @@ def SupportVectorMachineResults(X_test, X_train, Y_test, Y_train):
             SVC_results.loc[k, 'cut_off'] = cut_off_list[k] 
             SVC_results.loc[k, 'accuracy'] = accuracy_score(Y_test,SVC_preds)
             SVC_results.loc[k, 'recall'] = recall_score(Y_test, SVC_preds)
-    SVC_results['Performance'] = ((SVC_results['accuracy'] + SVC_results['recall'])/2)
+    SVC_results['Performance'] = 2/(1/SVC_results['accuracy'] + 1/SVC_results['recall']) 
                              
     return SVC_results
 
@@ -187,7 +187,7 @@ def LogisticRegressionResults(X_test, X_train, Y_test, Y_train):
             LR_results.loc[k, 'cut_off'] = parameters[i]
             LR_results.loc[k, 'accuracy'] = accuracy_score(Y_test,LR_preds)
             LR_results.loc[k, 'recall'] = recall_score(Y_test, LR_preds)
-    LR_results['Performance'] = ((LR_results['accuracy'] + LR_results['recall'])/2)
+    LR_results['Performance'] = 2/(1/LR_results['accuracy'] + 1/LR_results['recall']) 
     
     return LR_results
 
@@ -218,7 +218,7 @@ def AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, best_model):
             ADA_results.loc[k, 'cut_off'] = cut_off_list[k]
         
     ADA_results['max_depth'] = best_model['max_depth'].reset_index(drop = True)[0]
-    ADA_results['Performance'] = ((ADA_results['accuracy'] + ADA_results['recall'])/2)
+    ADA_results['Performance'] = 2/(1/ADA_results['accuracy'] + 1/ADA_results['recall']) 
      
     return ADA_results
 
@@ -250,7 +250,7 @@ def AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, best_model):
             ADA_results.loc[k, 'cut_off'] = cut_off_list[k]
         
     ADA_results['Kernels'] = best_model['Kernels'].reset_index(drop = True)[0]
-    ADA_results['Performance'] = ((ADA_results['accuracy'] + ADA_results['recall'])/2)
+    ADA_results['Performance'] = 2/(1/ADA_results['accuracy'] + 1/ADA_results['recall']) 
    
     
     return ADA_results
@@ -283,6 +283,6 @@ def GradientBoostingResults(X_test, X_train, Y_test, Y_train):
             GBC_results.loc[k, 'recall'] = recall_score(Y_test, GBC_preds)
             GBC_results.loc[k, 'cut_off'] = cut_off_list[k]
         
-    GBC_results['Performance'] = ((GBC_results['accuracy'] + GBC_results['recall'])/2)
+    GBC_results['Performance'] = 2/(1/GBC_results['accuracy'] + 1/GBC_results['recall']) 
         
     return GBC_results
