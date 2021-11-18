@@ -9,6 +9,9 @@ from tqdm import tqdm
 import pandas as pd
 import numpy as np
 
+cut_off_list = np.arange(0.1,0.6,0.05)
+
+N = len(cut_off_list)
 
 ####################
 ## Decision Trees ##
@@ -21,14 +24,15 @@ def DecisionTreesResults(X_test, X_train, Y_test, Y_train):
     print('DecisionTrees')
     for i in tqdm(range(0, DTC_n)):
         DTC = DecisionTreeClassifier(max_depth = hp.DecisionTreesHyperParameters().loc[i, 'max_depth']).fit(X_train,Y_train)
+        
+        for k in range(0,N):            
+            DTC_preds = DTC.predict_proba(X_test)[:,1]
+            DTC_preds = np.where(DTC_preds < cut_off_list[k],0,1)
 
-        DTC_preds = DTC.predict_proba(X_test)[:,1]
-        DTC_preds = np.where(DTC_preds < hp.DecisionTreesHyperParameters().loc[i, 'cut_off'],0,1)
-
-        DTC_results.loc[i, 'max_depth'] = hp.DecisionTreesHyperParameters().loc[i, 'max_depth']
-        DTC_results.loc[i, 'cut_off'] = hp.DecisionTreesHyperParameters().loc[i, 'cut_off']
-        DTC_results.loc[i, 'accuracy'] = accuracy_score(Y_test,DTC_preds)
-        DTC_results.loc[i, 'recall'] = recall_score(Y_test, DTC_preds)
+            DTC_results.loc[k, 'max_depth'] = hp.DecisionTreesHyperParameters().loc[i, 'max_depth']
+            DTC_results.loc[k, 'cut_off'] = cut_off_list[k]
+            DTC_results.loc[k, 'accuracy'] = accuracy_score(Y_test,DTC_preds)
+            DTC_results.loc[k, 'recall'] = recall_score(Y_test, DTC_preds)
         
     DTC_results['Performance'] = ((DTC_results['accuracy'] + DTC_results['recall'])/2)    
 
@@ -58,15 +62,16 @@ def RandomForestResults(X_test, X_train, Y_test, Y_train):
     for i in tqdm(range(0, RF_n)):
         RF = RandomForestClassifier(max_depth = hp.RandomForestHyperParameters().loc[i, 'max_depth'],
                                    n_estimators =  hp.RandomForestHyperParameters().loc[i, 'n_estimators']).fit(X_train,Y_train)
+        for k in range(0,N):
 
-        RF_preds = RF.predict_proba(X_test)[:,1]
-        RF_preds = np.where(RF_preds < hp.RandomForestHyperParameters().loc[i, 'cut_off'],0,1)
+            RF_preds = RF.predict_proba(X_test)[:,1]
+            RF_preds = np.where(RF_preds < cut_off_list[k],0,1)
 
-        RF_results.loc[i, 'max_depth'] = hp.RandomForestHyperParameters().loc[i, 'max_depth']
-        RF_results.loc[i, 'n_estimators'] = hp.RandomForestHyperParameters().loc[i, 'n_estimators']
-        RF_results.loc[i, 'cut_off'] = hp.RandomForestHyperParameters().loc[i, 'cut_off']
-        RF_results.loc[i, 'accuracy'] = accuracy_score(Y_test,RF_preds)
-        RF_results.loc[i, 'recall'] = recall_score(Y_test, RF_preds)
+            RF_results.loc[k, 'max_depth'] = hp.RandomForestHyperParameters().loc[i, 'max_depth']
+            RF_results.loc[k, 'n_estimators'] = hp.RandomForestHyperParameters().loc[i, 'n_estimators']
+            RF_results.loc[k, 'cut_off'] = cut_off_list[k]
+            RF_results.loc[k, 'accuracy'] = accuracy_score(Y_test,RF_preds)
+            RF_results.loc[k, 'recall'] = recall_score(Y_test, RF_preds)
         
     RF_results['Performance'] = ((RF_results['accuracy'] + RF_results['recall'])/2)
     
@@ -99,23 +104,25 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
         NN_md = tf.keras.models.Sequential([     
       tf.keras.layers.Dense(NnInputParameters.loc[i, 'number_of_neurons'], input_dim = number_of_columns, activation = NnInputParameters.loc[i,'activation']),
           
-      tf.keras.layers.Dense(NnInputParameters.loc[i, 'number_of_outputs'], activation = NnInputParameters.loc[i, 'activation2'])])
+      tf.keras.layers.Dense(2, activation = NnInputParameters.loc[i, 'activation2'])])
         
         NN_md.compile(optimizer = NnInputParameters.loc[i, 'optimizer'], metrics = ['accuracy'], loss=NnInputParameters.loc[i, 'loss_function'])
     
         NN_md.fit(X_train,tf.keras.utils.to_categorical(Y_train, num_classes = 2), epochs = 100,batch_size = 500,verbose = 0,
             validation_data = (X_test,tf.keras.utils.to_categorical(Y_test,num_classes = 2)))
-    
-        NN_preds = NN_md.predict(X_test)[:,1]
-        NN_preds = np.where(NN_preds < NnInputParameters.loc[i, 'cut_off'], 0, 1)
         
-        NN_results.loc[i, 'number_of_neurons'] = NnInputParameters.loc[i, 'number_of_neurons']
-        NN_results.loc[i, 'activation'] = NnInputParameters.loc[i, 'activation']
-        NN_results.loc[i, 'number_of_outputs'] = NnInputParameters.loc[i, 'number_of_outputs']
-        NN_results.loc[i, 'activation2'] = NnInputParameters.loc[i, 'activation2']
-        NN_results.loc[i, 'cut_off'] = NnInputParameters.loc[i, 'cut_off']
-        NN_results.loc[i, 'accuracy'] = accuracy_score(Y_test,NN_preds)
-        NN_results.loc[i, 'recall'] = recall_score(Y_test, NN_preds)
+        for k in range(0,N):
+    
+            NN_preds = NN_md.predict(X_test)[:,1]
+            NN_preds = np.where(NN_preds < cut_off_list[k], 0, 1)
+
+            NN_results.loc[k, 'number_of_neurons'] = NnInputParameters.loc[i, 'number_of_neurons']
+            NN_results.loc[k, 'activation'] = NnInputParameters.loc[i, 'activation']
+            NN_results.loc[k, 'number_of_outputs'] = NnInputParameters.loc[i, 'number_of_outputs']
+            NN_results.loc[k, 'activation2'] = NnInputParameters.loc[i, 'activation2']
+            NN_results.loc[k, 'cut_off'] = cut_off_list[k]
+            NN_results.loc[k, 'accuracy'] = accuracy_score(Y_test,NN_preds)
+            NN_results.loc[k, 'recall'] = recall_score(Y_test, NN_preds)
         
     NN_results['Performance'] = (NeuralNetworkResults['accuracy'] + NeuralNetworkResults['recall'])/2
     
@@ -136,13 +143,15 @@ def SupportVectorMachineResults(X_test, X_train, Y_test, Y_train):
     for i in tqdm(range(0, SVC_n)):
         SVC_md = SVC(kernel = SvmHyperParameters.loc[i, 'Kernels'], probability = True).fit(X_train, Y_train)
         
-        SVC_preds = SVC_md.predict_proba(X_test)[:,1]
-        SVC_preds = np.where(SVC_preds < SvmHyperParameters.loc[i, 'cut_off'],0,1)
+        for k in range(0,N):
         
-        SVC_results.loc[i, 'Kernels'] = SvmHyperParameters.loc[i,'Kernels']
-        SVC_results.loc[i, 'cut_off'] = SvmHyperParameters.loc[i,'cut_off']  
-        SVC_results.loc[i, 'accuracy'] = accuracy_score(Y_test,SVC_preds)
-        SVC_results.loc[i, 'recall'] = recall_score(Y_test, SVC_preds)
+            SVC_preds = SVC_md.predict_proba(X_test)[:,1]
+            SVC_preds = np.where(SVC_preds < cut_off_list[k],0,1)
+
+            SVC_results.loc[k, 'Kernels'] = SvmHyperParameters.loc[i,'Kernels']
+            SVC_results.loc[k, 'cut_off'] = cut_off_list[k] 
+            SVC_results.loc[k, 'accuracy'] = accuracy_score(Y_test,SVC_preds)
+            SVC_results.loc[k, 'recall'] = recall_score(Y_test, SVC_preds)
     SVC_results['Performance'] = ((SVC_results['accuracy'] + SVC_results['recall'])/2)
                              
     return SVC_results
@@ -168,13 +177,16 @@ def LogisticRegressionResults(X_test, X_train, Y_test, Y_train):
      
     print('LogisticRegression')   
     for i in tqdm(range(0, n)):                     
-        LR_md = LogisticRegression().fit(X_train,Y_train)                          
-        LR_preds = LR_md.predict_proba(X_test)[:,1]
-        LR_preds = np.where(LR_preds < parameters[i],0,1)
+        LR_md = LogisticRegression().fit(X_train,Y_train)
         
-        LR_results.loc[i, 'cut_off'] = parameters[i]
-        LR_results.loc[i, 'accuracy'] = accuracy_score(Y_test,LR_preds)
-        LR_results.loc[i, 'recall'] = recall_score(Y_test, LR_preds)
+        for k in range(0,N):
+            
+            LR_preds = LR_md.predict_proba(X_test)[:,1]
+            LR_preds = np.where(LR_preds < cut_off_list[k],0,1)
+
+            LR_results.loc[k, 'cut_off'] = parameters[i]
+            LR_results.loc[k, 'accuracy'] = accuracy_score(Y_test,LR_preds)
+            LR_results.loc[k, 'recall'] = recall_score(Y_test, LR_preds)
     LR_results['Performance'] = ((LR_results['accuracy'] + LR_results['recall'])/2)
     
     return LR_results
@@ -194,13 +206,16 @@ def AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, best_model):
     
         ADA_md = AdaBoostClassifier(base_estimator = DecisionTreeClassifier(max_depth = best_model['max_depth'].reset_index(drop = True)[0]), n_estimators = ADA_parameters.loc[i, 'estimators'], learning_rate = ADA_parameters.loc[i, 'learning_rate']).fit(X_train, Y_train)
         
-        ADA_preds = ADA_md.predict_proba(X_test)[:,1]
-        ADA_preds = np.where(ADA_preds < ADA_parameters.loc[i, 'cut_off'],0,1)
+        for k in range(0,N):
+            
+            ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+            ADA_preds = np.where(ADA_preds < cut_off_list[k],0,1)
 
-        ADA_results.loc[i, 'accuracy'] = accuracy_score(Y_test,ADA_preds)
-        ADA_results.loc[i, 'recall'] = recall_score(Y_test, ADA_preds)
-        ADA_results.loc[i, 'learning_rate'] = ADA_parameters.loc[i, 'learning_rate']
-        ADA_results.loc[i, 'estimators'] = ADA_parameters.loc[i, 'estimators']
+            ADA_results.loc[k, 'accuracy'] = accuracy_score(Y_test,ADA_preds)
+            ADA_results.loc[k, 'recall'] = recall_score(Y_test, ADA_preds)
+            ADA_results.loc[k, 'learning_rate'] = ADA_parameters.loc[i, 'learning_rate']
+            ADA_results.loc[k, 'estimators'] = ADA_parameters.loc[i, 'estimators']
+            ADA_results.loc[k, 'cut_off'] = cut_off_list[k]
         
     ADA_results['max_depth'] = best_model['max_depth'].reset_index(drop = True)[0]
     ADA_results['Performance'] = ((ADA_results['accuracy'] + ADA_results['recall'])/2)
@@ -222,14 +237,17 @@ def AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, best_model):
     
         ADA_md = AdaBoostClassifier(base_estimator = SVC(kernel = best_model['Kernels'].reset_index(drop = True)[0], probability = True), n_estimators = ADA_parameters.loc[i, 'estimators'], learning_rate = ADA_parameters.loc[i, 'learning_rate']).fit(X_train, Y_train)
         
-        ADA_preds = ADA_md.predict_proba(X_test)[:,1]
-        ADA_preds = np.where(ADA_preds < ADA_parameters.loc[i, 'cut_off'],0,1)
-
+        for k in range(0,N):
             
-        ADA_results.loc[i, 'accuracy'] = accuracy_score(Y_test,ADA_preds)
-        ADA_results.loc[i, 'recall'] = recall_score(Y_test, ADA_preds)
-        ADA_results.loc[i, 'learning_rate'] = ADA_parameters.loc[i, 'learning_rate']
-        ADA_results.loc[i, 'estimators'] = ADA_parameters.loc[i, 'estimators']
+            ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+            ADA_preds = np.where(ADA_preds < cut_off_list[k],0,1)
+
+
+            ADA_results.loc[k, 'accuracy'] = accuracy_score(Y_test,ADA_preds)
+            ADA_results.loc[k, 'recall'] = recall_score(Y_test, ADA_preds)
+            ADA_results.loc[k, 'learning_rate'] = ADA_parameters.loc[i, 'learning_rate']
+            ADA_results.loc[k, 'estimators'] = ADA_parameters.loc[i, 'estimators']
+            ADA_results.loc[k, 'cut_off'] = cut_off_list[k]
         
     ADA_results['Kernels'] = best_model['Kernels'].reset_index(drop = True)[0]
     ADA_results['Performance'] = ((ADA_results['accuracy'] + ADA_results['recall'])/2)
@@ -253,15 +271,17 @@ def GradientBoostingResults(X_test, X_train, Y_test, Y_train):
         
         GBC_md = GradientBoostingClassifier(max_depth = GBM_params.loc[i,'max_depth'], n_estimators = GBM_params.loc[i,'estimators'], learning_rate = GBM_params.loc[i,'learning_rate']).fit(X_train, Y_train)
     
-        
-        GBC_preds = GBC_md.predict_proba(X_test)[:,1]
-        GBC_preds = np.where(GBC_preds < GBM_params.loc[i, 'cut_off'],0,1)
-        
-        GBC_results.loc[i, 'max_depth'] = GBM_params.loc[i, 'max_depth']
-        GBC_results.loc[i, 'estimators'] = GBM_params.loc[i, 'estimators']
-        GBC_results.loc[i, 'learning_rate'] = GBM_params.loc[i, 'learning_rate']
-        GBC_results.loc[i, 'accuracy'] = accuracy_score(Y_test,GBC_preds)
-        GBC_results.loc[i, 'recall'] = recall_score(Y_test, GBC_preds)
+        for k in range(0,N):
+            
+            GBC_preds = GBC_md.predict_proba(X_test)[:,1]
+            GBC_preds = np.where(GBC_preds < cut_off_list[k],0,1)
+
+            GBC_results.loc[k, 'max_depth'] = GBM_params.loc[i, 'max_depth']
+            GBC_results.loc[k, 'estimators'] = GBM_params.loc[i, 'estimators']
+            GBC_results.loc[k, 'learning_rate'] = GBM_params.loc[i, 'learning_rate']
+            GBC_results.loc[k, 'accuracy'] = accuracy_score(Y_test,GBC_preds)
+            GBC_results.loc[k, 'recall'] = recall_score(Y_test, GBC_preds)
+            GBC_results.loc[k, 'cut_off'] = cut_off_list[k]
         
     GBC_results['Performance'] = ((GBC_results['accuracy'] + GBC_results['recall'])/2)
         
