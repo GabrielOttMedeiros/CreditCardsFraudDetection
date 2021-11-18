@@ -46,13 +46,13 @@ Y = Y_train
 
 import Get_Variable_Importance as gvi
 
-print('DecisionTrees')
+print('DecisionTrees_Variablr_Importance')
 decision_trees_variable_importance = gvi.Decision_Tree_Importance(X,Y)
 
-print('RandomForest')
+print('RandomForest_Variablr_Importance')
 random_forest_variable_importance = gvi.Random_Forest_Importance(X,Y)
 
-print('ImportantVariables')
+print('ImportantVariables_Variablr_Importance')
 df_importance_columns = gvi.Getting_Best_Model(decision_trees_variable_importance,random_forest_variable_importance,X,Y)
 
 
