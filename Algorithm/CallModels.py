@@ -24,7 +24,7 @@ file_content_stream = file_object.get('Body')
 file_content_stream2 = file_object2.get('Body')
 
 
-## Reading csv file, index_col = 0 makes the first column of the data to become the index of our pandas data frame
+## Reading csv files, index_col = 0 makes the first column of the data to become the index of our pandas data frame
 train_data = pd.read_csv(file_content_stream, index_col = 0)
 test_data = pd.read_csv(file_content_stream2, index_col = 0)
 
@@ -37,30 +37,19 @@ test_data = test_data.select_dtypes(exclude=['object'])
 train_data = train_data.dropna()
 test_data = test_data.dropna()
 
+## Here we define the target and predictor variables for our Variable Importance extractor
+X, Y = train_data.drop(columns = 'is_fraud'), train_data['is_fraud']
 
-X_train, Y_train = train_data.drop(columns = 'is_fraud'), train_data['is_fraud']
-
-
-### REMOVE LATER
-X = X_train.loc[0:10000]
-Y = Y_train.loc[0:10000]
-
+## Here we call our variable importance model and its results 
 import Get_Variable_Importance as gvi
 
-
 df_importance_columns = gvi.Importance(X,Y)
-
 
 X_test = test_data[df_importance_columns.drop(columns = 'is_fraud').columns]
 Y_test = test_data['is_fraud']
 
-### REMOVE LATER
-X_test = X_test.loc[0:10000]
-Y_test = Y_test.loc[0:10000]
-
 X_train = train_data[df_importance_columns.drop(columns = 'is_fraud').columns]
 Y_train = train_data['is_fraud']
-
 
 
 ## Decision Trees
@@ -91,6 +80,7 @@ ADA_SVC= em.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
 GBC_results = em.GradientBoostingResults(X_test, X_train, Y_test, Y_train)
 
 
+## Storing models results in a data frame
 DTC_results.to_csv('CreditCardsFraudDetection/Algorithm/DTC_results.csv', index = False)
 DTC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/DTC_best_model.csv', index = False)
 RF_results.to_csv('CreditCardsFraudDetection/Algorithm/RF_results.csv', index = False)
