@@ -32,11 +32,11 @@ def DecisionTreesResults(X_test, X_train, Y_test, Y_train):
         
         ## Here we generate our model
         DTC = DecisionTreeClassifier(max_depth = hp.DecisionTreesHyperParameters().loc[i, 'max_depth']).fit(X_train,Y_train)
-        
-        ## Here we make predictions on our test dataset
-        DTC_preds = DTC.predict_proba(X_test)[:,1]
-        
+              
         for k in range(0,N):            
+            
+            ## Here we make predictions on our test dataset
+            DTC_preds = DTC.predict_proba(X_test)[:,1]
             
             ## Here we loop though different cut offs
             DTC_preds = np.where(DTC_preds < cut_off_list[k],0,1)
@@ -85,9 +85,11 @@ def RandomForestResults(X_test, X_train, Y_test, Y_train):
         RF = RandomForestClassifier(max_depth = hp.RandomForestHyperParameters().loc[i, 'max_depth'],
                                    n_estimators =  hp.RandomForestHyperParameters().loc[i, 'n_estimators']).fit(X_train,Y_train)
         
-        ## Here we make predictions on our test dataset
-        RF_preds = RF.predict_proba(X_test)[:,1]
+        
         for k in range(0,N):
+            
+            ## Here we make predictions on our test dataset
+            RF_preds = RF.predict_proba(X_test)[:,1]
 
             ## Here we loop though different cut offs
             RF_preds = np.where(RF_preds < cut_off_list[k],0,1)
@@ -149,10 +151,12 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
         NN_md.fit(X_train,tf.keras.utils.to_categorical(Y_train, num_classes = 2), epochs = 100,batch_size = 500,verbose = 0,
             validation_data = (X_test,tf.keras.utils.to_categorical(Y_test,num_classes = 2)))
         
-        ## Here we make predictions on our test dataset
-        NN_preds = NN_md.predict(X_test)[:,1]
+        
         
         for k in range(0,N):
+            
+            ## Here we make predictions on our test dataset
+            NN_preds = NN_md.predict(X_test)[:,1]
     
             ## Here we loop though different cut offs
             NN_preds = np.where(NN_preds < cut_off_list[k], 0, 1)
@@ -199,10 +203,11 @@ def SupportVectorMachineResults(X_test, X_train, Y_test, Y_train):
         ## Here we generate our model
         SVC_md = SVC(kernel = SvmHyperParameters.loc[i, 'Kernels'], probability = True).fit(X_train, Y_train)
         
-        ## Here we make predictions on our test dataset
         
-        SVC_preds = SVC_md.predict_proba(X_test)[:,1]
         for k in range(0,N):
+            
+            ## Here we make predictions on our test dataset
+            SVC_preds = SVC_md.predict_proba(X_test)[:,1]
         
             ## Here we loop though different cut offs
             SVC_preds = np.where(SVC_preds < cut_off_list[k],0,1)
@@ -244,11 +249,11 @@ def LogisticRegressionResults(X_test, X_train, Y_test, Y_train):
     ## Here we generate our model        
     LR_md = LogisticRegression().fit(X_train,Y_train)
     
-    ## Here we make predictions on our test dataset
-    LR_preds = LR_md.predict_proba(X_test)[:,1]
-    
     print('LogisticRegression')  
-    for k in tqdm(range(0,N)):       
+    for k in tqdm(range(0,N)):   
+        
+        ## Here we make predictions on our test dataset
+        LR_preds = LR_md.predict_proba(X_test)[:,1]
         
         ## Here we loop though different cut offs
         LR_preds = np.where(LR_preds < cut_off_list[k],0,1)
@@ -287,11 +292,12 @@ def AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, best_model):
         ## Here we generate our model
         ADA_md = AdaBoostClassifier(base_estimator = DecisionTreeClassifier(max_depth = best_model['max_depth'].reset_index(drop = True)[0]), n_estimators = ADA_parameters.loc[i, 'estimators'], learning_rate = ADA_parameters.loc[i, 'learning_rate']).fit(X_train, Y_train)
         
-        ## Here we make predictions on our test dataset
-        ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+        
         
         for k in range(0,N):
             
+            ## Here we make predictions on our test dataset
+            ADA_preds = ADA_md.predict_proba(X_test)[:,1]
             
             ADA_preds = np.where(ADA_preds < cut_off_list[k],0,1)
             
@@ -333,10 +339,12 @@ def AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, best_model):
         ## Here we generate our model
         ADA_md = AdaBoostClassifier(base_estimator = SVC(kernel = best_model['Kernels'].reset_index(drop = True)[0], probability = True), n_estimators = ADA_parameters.loc[i, 'estimators'], learning_rate = ADA_parameters.loc[i, 'learning_rate']).fit(X_train, Y_train)
         
-        ## Here we make predictions on our test dataset
-        ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+        
         
         for k in range(0,N):
+            
+            ## Here we make predictions on our test dataset
+            ADA_preds = ADA_md.predict_proba(X_test)[:,1]
             
             ## Here we loop though different cut offs
             ADA_preds = np.where(ADA_preds < cut_off_list[k],0,1)
@@ -380,10 +388,12 @@ def GradientBoostingResults(X_test, X_train, Y_test, Y_train):
         ## Here we generate our model
         GBC_md = GradientBoostingClassifier(max_depth = GBM_params.loc[i,'max_depth'], n_estimators = GBM_params.loc[i,'estimators'], learning_rate = GBM_params.loc[i,'learning_rate']).fit(X_train, Y_train)
         
-        ## Here we make predictions on our test dataset
-        GBC_preds = GBC_md.predict_proba(X_test)[:,1]
+        
     
         for k in range(0,N):
+            
+            ## Here we make predictions on our test dataset
+            GBC_preds = GBC_md.predict_proba(X_test)[:,1]
             
             ## Here we loop though different cut offs
             GBC_preds = np.where(GBC_preds < cut_off_list[k],0,1)
