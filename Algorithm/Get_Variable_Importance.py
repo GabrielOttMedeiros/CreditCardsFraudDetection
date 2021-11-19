@@ -60,13 +60,13 @@ def Extract_Decision_Tree_Importance(X, Y, data):
         for j in range(0, N):
 
             ## Applying the cut-off value
-            preds = np.where(preds < threshold_list[j], 0, 1)
+            preds_new = np.where(preds < threshold_list[j], 0, 1)
             
             ## Appending model information to the list
             list_results.append([data.loc[i, 'max_depth'], 
                                 threshold_list[j], 
-                                accuracy_score(Y_test, preds),
-                                recall_score(Y_test, preds),
+                                accuracy_score(Y_test, preds_new),
+                                recall_score(Y_test, preds_new),
                                 md1.feature_importances_.T])
             
     ## Defining a new data frame
@@ -111,14 +111,14 @@ def Extract_Random_Forest_Importance(X, Y, data):
         for j in range(0, N):
             
             ## Applying the cut-off value
-            preds = np.where(preds < threshold_list[j], 0, 1)
+            preds_new = np.where(preds < threshold_list[j], 0, 1)
             
             ## Appending model information to the list
             list_results.append([data.loc[i, 'max_depth'], 
                                  data.loc[i, 'n_estimators'], 
                                  threshold_list[j], 
-                                 accuracy_score(Y_test, preds), 
-                                 recall_score(Y_test, preds), 
+                                 accuracy_score(Y_test, preds_new), 
+                                 recall_score(Y_test, preds_new), 
                                  md1.feature_importances_.T])
             
     ## Defining a new data frame
