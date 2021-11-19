@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 ## Creating cut offs
-cut_off_list = np.arange(0.001,0.6,0.001)
+cut_off_list = np.arange(0.05,0.6,0.05)
 
 ## Len of cut off for lists
 N = len(cut_off_list)
