@@ -42,25 +42,13 @@ X_train, Y_train = train_data.drop(columns = 'is_fraud'), train_data['is_fraud']
 
 
 ### REMOVE LATER
-X_train = X_train.loc[0:10000]
-Y_train = Y_train.loc[0:10000]
-
-
-X = X_train
-Y = Y_train
-
-
+X = X_train.loc[0:10000]
+Y = Y_train.loc[0:10000]
 
 import Get_Variable_Importance as gvi
 
-print('DecisionTrees_Variable_Importance')
-decision_trees_variable_importance = gvi.Decision_Tree_Importance(X,Y)
 
-print('RandomForest_Variable_Importance')
-random_forest_variable_importance = gvi.Random_Forest_Importance(X,Y)
-
-print('ImportantVariables_Variable_Importance')
-df_importance_columns = gvi.Getting_Best_Model(decision_trees_variable_importance,random_forest_variable_importance,X,Y)
+df_importance_columns = gvi.Importance(X,Y)
 
 
 X_test = test_data[df_importance_columns.drop(columns = 'is_fraud').columns]

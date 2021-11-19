@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
 
-## Here we create a list with cutoff values for our prediciotns
-cut_off_list = np.arange(0.1,0.6,0.05)
-
 ####################################
 ## Random Forest Hyper-parameters ##
 ####################################
@@ -25,11 +22,8 @@ def RandomForestHyperParameters():
     ## Here we loop through each list to have every possible combination of hyper-parameters 
     for depth in range(0, len(max_depth)):
         for estimators in range(0, len(n_estimators)):
-             for cutoffvalues in range(0, len(cut_off_list)):
-                    RandomForesDepth.append(max_depth[depth])
-                    RandomForesEstimators.append(n_estimators[estimators])
-
-                    
+            RandomForesDepth.append(max_depth[depth])
+            RandomForesEstimators.append(n_estimators[estimators])                 
     
     RandomForestParameters['max_depth'] = RandomForesDepth
     RandomForestParameters['n_estimators'] = RandomForesEstimators
@@ -124,8 +118,7 @@ def SvmHyperParameters():
     
     
     for kernels in range(0, len(list_of_kernels)):
-        for cut_off_values in range(0, len(cut_off_list)):
-            kernels_to_append.append(list_of_kernels[kernels])
+        kernels_to_append.append(list_of_kernels[kernels])
         
     
     SvmHyperParameters = pd.DataFrame({'Kernels':kernels_to_append})
@@ -150,7 +143,6 @@ def AdaBoostHyperParameters():
 
     for lr in range(0, len(learning_rate_list)):
         for est in range(0, len(n_estimators)):
-
             estimators_to_append.append(n_estimators[est])
             lr_to_append.append(learning_rate_list[lr])
             
