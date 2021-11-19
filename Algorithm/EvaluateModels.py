@@ -11,7 +11,7 @@ import pandas as pd
 import numpy as np
 
 ## Creating cut offs
-cut_off_list = np.arange(0.1,0.6,0.05)
+cut_off_list = np.arange(0.001,0.6,0.001)
 
 ## Len of cut off for lists
 N = len(cut_off_list)
@@ -47,8 +47,8 @@ def DecisionTreesResults(X_test, X_train, Y_test, Y_train):
                                  accuracy_score(Y_test,DTC_preds),
                                  recall_score(Y_test, DTC_preds)])
 
-            ## Here we store the results in a data frame
-            DTC_results = pd.DataFrame(columns = ['max_depth','cut_off','accuracy','recall'], data = list_results)
+    ## Here we store the results in a data frame
+    DTC_results = pd.DataFrame(columns = ['max_depth','cut_off','accuracy','recall'], data = list_results)
         
     ## Here we compute the harmonic average of the model    
     DTC_results['Performance'] = 2/(1/DTC_results['accuracy'] + 1/DTC_results['recall'])   
@@ -160,7 +160,6 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
             ## Here we append the different results
             list_results.append([NnInputParameters.loc[i, 'number_of_neurons'],
                                 NnInputParameters.loc[i, 'activation'],
-                                NnInputParameters.loc[i, 'number_of_outputs'],
                                 NnInputParameters.loc[i, 'activation2'],
                                 cut_off_list[k],
                                 accuracy_score(Y_test,NN_preds),
@@ -169,7 +168,6 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
     ## Here we store the results in a data frame
     NN_results = pd.DataFrame(columns = ['number_of_neurons',
                                          'activation',
-                                         'number_of_outputs',
                                          'activation2',
                                          'cut_off',
                                          'accuracy',
