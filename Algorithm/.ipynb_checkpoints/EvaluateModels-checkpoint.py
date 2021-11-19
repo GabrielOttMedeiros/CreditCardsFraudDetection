@@ -25,9 +25,10 @@ def DecisionTreesResults(X_test, X_train, Y_test, Y_train):
     print('DecisionTrees')
     for i in tqdm(range(0, DTC_n)):
         DTC = DecisionTreeClassifier(max_depth = hp.DecisionTreesHyperParameters().loc[i, 'max_depth']).fit(X_train,Y_train)
+        DTC_preds = DTC.predict_proba(X_test)[:,1]
         
         for k in range(0,N):            
-            DTC_preds = DTC.predict_proba(X_test)[:,1]
+            
             DTC_preds = np.where(DTC_preds < cut_off_list[k],0,1)
             
             list_results.append([hp.DecisionTreesHyperParameters().loc[i,'max_depth'],
@@ -65,9 +66,10 @@ def RandomForestResults(X_test, X_train, Y_test, Y_train):
     for i in tqdm(range(0, RF_n)):
         RF = RandomForestClassifier(max_depth = hp.RandomForestHyperParameters().loc[i, 'max_depth'],
                                    n_estimators =  hp.RandomForestHyperParameters().loc[i, 'n_estimators']).fit(X_train,Y_train)
+        RF_preds = RF.predict_proba(X_test)[:,1]
         for k in range(0,N):
 
-            RF_preds = RF.predict_proba(X_test)[:,1]
+            
             RF_preds = np.where(RF_preds < cut_off_list[k],0,1)
             
             list_results.append([hp.RandomForestHyperParameters().loc[i, 'max_depth'],

@@ -41,8 +41,15 @@ test_data = test_data.dropna()
 X_train, Y_train = train_data.drop(columns = 'is_fraud'), train_data['is_fraud']
 
 
+### REMOVE LATER
+X_train = X_train.loc[0:10000]
+Y_train = Y_train.loc[0:10000]
+
+
 X = X_train
 Y = Y_train
+
+
 
 import Get_Variable_Importance as gvi
 
@@ -59,8 +66,13 @@ df_importance_columns = gvi.Getting_Best_Model(decision_trees_variable_importanc
 X_test = test_data[df_importance_columns.drop(columns = 'is_fraud').columns]
 Y_test = test_data['is_fraud']
 
+### REMOVE LATER
+X_test = X_test.loc[0:10000]
+Y_test = Y_test.loc[0:10000]
+
 X_train = train_data[df_importance_columns.drop(columns = 'is_fraud').columns]
 Y_train = train_data['is_fraud']
+
 
 
 ## Decision Trees
