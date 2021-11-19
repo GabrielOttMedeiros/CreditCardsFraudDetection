@@ -312,13 +312,6 @@ def GradientBoostingResults(X_test, X_train, Y_test, Y_train):
                                  accuracy_score(Y_test,GBC_preds),
                                  recall_score(Y_test, GBC_preds),
                                  cut_off_list[k]])
-
-            GBC_results.loc[k, 'max_depth'] = 
-            GBC_results.loc[k, 'estimators'] = 
-            GBC_results.loc[k, 'learning_rate'] = 
-            GBC_results.loc[k, 'accuracy'] = 
-            GBC_results.loc[k, 'recall'] = 
-            GBC_results.loc[k, 'cut_off'] = 
         
     GBC_results = pd.DataFrame(columns = ['max_depth','estimators','learning_rate','accuracy','recall','cut_off'])
     GBC_results['Performance'] = 2/(1/GBC_results['accuracy'] + 1/GBC_results['recall']) 
