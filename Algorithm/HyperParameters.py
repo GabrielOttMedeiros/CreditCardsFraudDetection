@@ -178,7 +178,6 @@ def GradientBoostingHyperParameters():
             for depth in range(0, len(max_depth)):
 
                 estimators_to_append.append(n_estimators[est])
-                co_to_append.append(cut_off_list[cut_off])
                 lr_to_append.append(learning_rate_list[lr])
                 depth_to_append.append(max_depth[depth])
 
