@@ -120,9 +120,11 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
         NN_md.fit(X_train,tf.keras.utils.to_categorical(Y_train, num_classes = 2), epochs = 100,batch_size = 500,verbose = 0,
             validation_data = (X_test,tf.keras.utils.to_categorical(Y_test,num_classes = 2)))
         
+        NN_preds = NN_md.predict(X_test)[:,1]
+        
         for k in range(0,N):
     
-            NN_preds = NN_md.predict(X_test)[:,1]
+            
             NN_preds = np.where(NN_preds < cut_off_list[k], 0, 1)
             
             list_results.append([NnInputParameters.loc[i, 'number_of_neurons'],
@@ -162,9 +164,10 @@ def SupportVectorMachineResults(X_test, X_train, Y_test, Y_train):
     for i in tqdm(range(0, SVC_n)):
         SVC_md = SVC(kernel = SvmHyperParameters.loc[i, 'Kernels'], probability = True).fit(X_train, Y_train)
         
+        SVC_preds = SVC_md.predict_proba(X_test)[:,1]
         for k in range(0,N):
         
-            SVC_preds = SVC_md.predict_proba(X_test)[:,1]
+            
             SVC_preds = np.where(SVC_preds < cut_off_list[k],0,1)
             
             list_results.append([SvmHyperParameters.loc[i,'Kernels'], 
@@ -198,10 +201,12 @@ def LogisticRegressionResults(X_test, X_train, Y_test, Y_train):
        
     LR_md = LogisticRegression().fit(X_train,Y_train)
     
+    LR_preds = LR_md.predict_proba(X_test)[:,1]
+    
     print('LogisticRegression')  
     for k in tqdm(range(0,N)):       
         
-        LR_preds = LR_md.predict_proba(X_test)[:,1]
+        
         LR_preds = np.where(LR_preds < cut_off_list[k],0,1)
         
         list_results.append([cut_off_list[k],
@@ -231,9 +236,11 @@ def AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, best_model):
     
         ADA_md = AdaBoostClassifier(base_estimator = DecisionTreeClassifier(max_depth = best_model['max_depth'].reset_index(drop = True)[0]), n_estimators = ADA_parameters.loc[i, 'estimators'], learning_rate = ADA_parameters.loc[i, 'learning_rate']).fit(X_train, Y_train)
         
+        ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+        
         for k in range(0,N):
             
-            ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+            
             ADA_preds = np.where(ADA_preds < cut_off_list[k],0,1)
             
             list_results.append([accuracy_score(Y_test,ADA_preds),
@@ -266,9 +273,12 @@ def AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, best_model):
     
         ADA_md = AdaBoostClassifier(base_estimator = SVC(kernel = best_model['Kernels'].reset_index(drop = True)[0], probability = True), n_estimators = ADA_parameters.loc[i, 'estimators'], learning_rate = ADA_parameters.loc[i, 'learning_rate']).fit(X_train, Y_train)
         
+        
+        ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+        
         for k in range(0,N):
             
-            ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+            
             ADA_preds = np.where(ADA_preds < cut_off_list[k],0,1)
 
             list_results.append([accuracy_score(Y_test,ADA_preds),
@@ -302,10 +312,12 @@ def GradientBoostingResults(X_test, X_train, Y_test, Y_train):
         GBM_params = hp.GradientBoostingHyperParameters()
         
         GBC_md = GradientBoostingClassifier(max_depth = GBM_params.loc[i,'max_depth'], n_estimators = GBM_params.loc[i,'estimators'], learning_rate = GBM_params.loc[i,'learning_rate']).fit(X_train, Y_train)
+        
+        GBC_preds = GBC_md.predict_proba(X_test)[:,1]
     
         for k in range(0,N):
             
-            GBC_preds = GBC_md.predict_proba(X_test)[:,1]
+            
             GBC_preds = np.where(GBC_preds < cut_off_list[k],0,1)
             
             list_results.append([GBM_params.loc[i, 'max_depth'],
@@ -315,7 +327,7 @@ def GradientBoostingResults(X_test, X_train, Y_test, Y_train):
                                  recall_score(Y_test, GBC_preds),
                                  cut_off_list[k]])
         
-    GBC_results = pd.DataFrame(columns = ['max_depth','estimators','learning_rate','accuracy','recall','cut_off'])
+    GBC_results = pd.DataFrame(columns = ['max_depth','estimators','learning_rate','accuracy','recall','cut_off'], data = list_results)
     GBC_results['Performance'] = 2/(1/GBC_results['accuracy'] + 1/GBC_results['recall']) 
         
     return GBC_results
