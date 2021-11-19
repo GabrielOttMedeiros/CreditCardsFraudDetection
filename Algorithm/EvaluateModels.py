@@ -32,20 +32,22 @@ def DecisionTreesResults(X_test, X_train, Y_test, Y_train):
         
         ## Here we generate our model
         DTC = DecisionTreeClassifier(max_depth = hp.DecisionTreesHyperParameters().loc[i, 'max_depth']).fit(X_train,Y_train)
+        
+        ## Here we make predictions on our test dataset
+        DTC_preds = DTC.predict_proba(X_test)[:,1]
               
         for k in range(0,N):            
             
-            ## Here we make predictions on our test dataset
-            DTC_preds = DTC.predict_proba(X_test)[:,1]
+
             
             ## Here we loop though different cut offs
-            DTC_preds = np.where(DTC_preds < cut_off_list[k],0,1)
+            DTC_preds_new = np.where(DTC_preds < cut_off_list[k],0,1)
             
             ## Here we append the different results
             list_results.append([hp.DecisionTreesHyperParameters().loc[i,'max_depth'],
                                  cut_off_list[k],
-                                 accuracy_score(Y_test,DTC_preds),
-                                 recall_score(Y_test, DTC_preds)])
+                                 accuracy_score(Y_test,DTC_preds_new),
+                                 recall_score(Y_test, DTC_preds_new)])
 
     ## Here we store the results in a data frame
     DTC_results = pd.DataFrame(columns = ['max_depth','cut_off','accuracy','recall'], data = list_results)
@@ -85,21 +87,21 @@ def RandomForestResults(X_test, X_train, Y_test, Y_train):
         RF = RandomForestClassifier(max_depth = hp.RandomForestHyperParameters().loc[i, 'max_depth'],
                                    n_estimators =  hp.RandomForestHyperParameters().loc[i, 'n_estimators']).fit(X_train,Y_train)
         
+        ## Here we make predictions on our test dataset
+        RF_preds = RF.predict_proba(X_test)[:,1]
+        
         
         for k in range(0,N):
-            
-            ## Here we make predictions on our test dataset
-            RF_preds = RF.predict_proba(X_test)[:,1]
 
             ## Here we loop though different cut offs
-            RF_preds = np.where(RF_preds < cut_off_list[k],0,1)
+            RF_preds_new = np.where(RF_preds < cut_off_list[k],0,1)
             
             ## Here we append the different results
             list_results.append([hp.RandomForestHyperParameters().loc[i, 'max_depth'],
                                hp.RandomForestHyperParameters().loc[i, 'n_estimators'],
                                cut_off_list[k],
-                               accuracy_score(Y_test,RF_preds),
-                               recall_score(Y_test, RF_preds)])
+                               accuracy_score(Y_test,RF_preds_new),
+                               recall_score(Y_test, RF_preds_new)])
     
     ## Here we store the results in a data frame
     RF_results = pd.DataFrame(columns = ['max_depth','n_estimators','cut_off','accuracy','recall'], data = list_results)
@@ -151,23 +153,23 @@ def NeuralNetworksResults(X_test, X_train, Y_test, Y_train):
         NN_md.fit(X_train,tf.keras.utils.to_categorical(Y_train, num_classes = 2), epochs = 100,batch_size = 500,verbose = 0,
             validation_data = (X_test,tf.keras.utils.to_categorical(Y_test,num_classes = 2)))
         
-        
+        ## Here we make predictions on our test dataset
+        NN_preds = NN_md.predict(X_test)[:,1]
         
         for k in range(0,N):
             
-            ## Here we make predictions on our test dataset
-            NN_preds = NN_md.predict(X_test)[:,1]
+
     
             ## Here we loop though different cut offs
-            NN_preds = np.where(NN_preds < cut_off_list[k], 0, 1)
+            NN_preds_new = np.where(NN_preds < cut_off_list[k], 0, 1)
             
             ## Here we append the different results
             list_results.append([NnInputParameters.loc[i, 'number_of_neurons'],
                                 NnInputParameters.loc[i, 'activation'],
                                 NnInputParameters.loc[i, 'activation2'],
                                 cut_off_list[k],
-                                accuracy_score(Y_test,NN_preds),
-                                recall_score(Y_test, NN_preds)])
+                                accuracy_score(Y_test,NN_preds_new),
+                                recall_score(Y_test, NN_preds_new)])
     
     ## Here we store the results in a data frame
     NN_results = pd.DataFrame(columns = ['number_of_neurons',
@@ -204,19 +206,20 @@ def SupportVectorMachineResults(X_test, X_train, Y_test, Y_train):
         SVC_md = SVC(kernel = SvmHyperParameters.loc[i, 'Kernels'], probability = True).fit(X_train, Y_train)
         
         
+        ## Here we make predictions on our test dataset
+        SVC_preds = SVC_md.predict_proba(X_test)[:,1]
+        
         for k in range(0,N):
             
-            ## Here we make predictions on our test dataset
-            SVC_preds = SVC_md.predict_proba(X_test)[:,1]
-        
+            
             ## Here we loop though different cut offs
-            SVC_preds = np.where(SVC_preds < cut_off_list[k],0,1)
+            SVC_preds_new = np.where(SVC_preds < cut_off_list[k],0,1)
             
             ## Here we append the different results
             list_results.append([SvmHyperParameters.loc[i,'Kernels'], 
                                  cut_off_list[k],
-                                 accuracy_score(Y_test,SVC_preds),
-                                 recall_score(Y_test, SVC_preds)])
+                                 accuracy_score(Y_test,SVC_preds_new),
+                                 recall_score(Y_test, SVC_preds_new)])
 
 
     ## Here we store the results in a data frame        
@@ -249,19 +252,22 @@ def LogisticRegressionResults(X_test, X_train, Y_test, Y_train):
     ## Here we generate our model        
     LR_md = LogisticRegression().fit(X_train,Y_train)
     
+    
+    ## Here we make predictions on our test dataset
+    LR_preds = LR_md.predict_proba(X_test)[:,1]
+        
     print('LogisticRegression')  
     for k in tqdm(range(0,N)):   
         
-        ## Here we make predictions on our test dataset
-        LR_preds = LR_md.predict_proba(X_test)[:,1]
+
         
         ## Here we loop though different cut offs
-        LR_preds = np.where(LR_preds < cut_off_list[k],0,1)
+        LR_preds_new = np.where(LR_preds < cut_off_list[k],0,1)
         
         ## Here we append the different results
         list_results.append([cut_off_list[k],
-                             accuracy_score(Y_test,LR_preds),
-                             recall_score(Y_test, LR_preds)])
+                             accuracy_score(Y_test,LR_preds_new),
+                             recall_score(Y_test, LR_preds_new)])
      
     ## Here we store the results in a data frame
     LR_results = pd.DataFrame(columns = ['cut_off','accuracy','recall'], data = list_results)
@@ -292,17 +298,15 @@ def AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, best_model):
         ## Here we generate our model
         ADA_md = AdaBoostClassifier(base_estimator = DecisionTreeClassifier(max_depth = best_model['max_depth'].reset_index(drop = True)[0]), n_estimators = ADA_parameters.loc[i, 'estimators'], learning_rate = ADA_parameters.loc[i, 'learning_rate']).fit(X_train, Y_train)
         
-        
+        ## Here we make predictions on our test dataset
+        ADA_preds = ADA_md.predict_proba(X_test)[:,1]  
         
         for k in range(0,N):
             
-            ## Here we make predictions on our test dataset
-            ADA_preds = ADA_md.predict_proba(X_test)[:,1]
+            ADA_preds_new = np.where(ADA_preds < cut_off_list[k],0,1)
             
-            ADA_preds = np.where(ADA_preds < cut_off_list[k],0,1)
-            
-            list_results.append([accuracy_score(Y_test,ADA_preds),
-                                recall_score(Y_test, ADA_preds),
+            list_results.append([accuracy_score(Y_test,ADA_preds_new),
+                                recall_score(Y_test, ADA_preds_new),
                                 ADA_parameters.loc[i, 'learning_rate'],
                                 ADA_parameters.loc[i, 'estimators'],
                                 cut_off_list[k]])
@@ -339,19 +343,17 @@ def AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, best_model):
         ## Here we generate our model
         ADA_md = AdaBoostClassifier(base_estimator = SVC(kernel = best_model['Kernels'].reset_index(drop = True)[0], probability = True), n_estimators = ADA_parameters.loc[i, 'estimators'], learning_rate = ADA_parameters.loc[i, 'learning_rate']).fit(X_train, Y_train)
         
-        
+        ## Here we make predictions on our test dataset
+        ADA_preds = ADA_md.predict_proba(X_test)[:,1]
         
         for k in range(0,N):
-            
-            ## Here we make predictions on our test dataset
-            ADA_preds = ADA_md.predict_proba(X_test)[:,1]
-            
+           
             ## Here we loop though different cut offs
-            ADA_preds = np.where(ADA_preds < cut_off_list[k],0,1)
+            ADA_preds_new = np.where(ADA_preds < cut_off_list[k],0,1)
             
             ## Here we append the different results
-            list_results.append([accuracy_score(Y_test,ADA_preds),
-                                recall_score(Y_test, ADA_preds),
+            list_results.append([accuracy_score(Y_test,ADA_preds_new),
+                                recall_score(Y_test, ADA_preds_new),
                                 ADA_parameters.loc[i, 'learning_rate'],
                                 ADA_parameters.loc[i, 'estimators'],
                                 cut_off_list[k]])
@@ -388,22 +390,21 @@ def GradientBoostingResults(X_test, X_train, Y_test, Y_train):
         ## Here we generate our model
         GBC_md = GradientBoostingClassifier(max_depth = GBM_params.loc[i,'max_depth'], n_estimators = GBM_params.loc[i,'estimators'], learning_rate = GBM_params.loc[i,'learning_rate']).fit(X_train, Y_train)
         
-        
+        ## Here we make predictions on our test dataset
+        GBC_preds = GBC_md.predict_proba(X_test)[:,1]
     
         for k in range(0,N):
             
-            ## Here we make predictions on our test dataset
-            GBC_preds = GBC_md.predict_proba(X_test)[:,1]
-            
+
             ## Here we loop though different cut offs
-            GBC_preds = np.where(GBC_preds < cut_off_list[k],0,1)
+            GBC_preds_new = np.where(GBC_preds < cut_off_list[k],0,1)
             
             ## Here we append the different results
             list_results.append([GBM_params.loc[i, 'max_depth'],
                                  GBM_params.loc[i, 'estimators'],
                                  GBM_params.loc[i, 'learning_rate'],
-                                 accuracy_score(Y_test,GBC_preds),
-                                 recall_score(Y_test, GBC_preds),
+                                 accuracy_score(Y_test,GBC_preds_new),
+                                 recall_score(Y_test, GBC_preds_new),
                                  cut_off_list[k]])
      
     ## Here we store the results in a data frame
