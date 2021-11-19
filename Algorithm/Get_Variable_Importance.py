@@ -44,7 +44,7 @@ def Extract_Decision_Tree_Importance(X, Y, data):
 
     n = data.shape[0]
     
-    print('Decision Trees:')
+    print('Decision Trees Variables Importance:')
     
     for i in tqdm(range(0, n)):
         
@@ -94,7 +94,7 @@ def Extract_Random_Forest_Importance(X, Y, data):
 
     n = data.shape[0]
     
-    print('Random Forest:')
+    print('Random Forest Variables Importance:')
 
     for i in tqdm(range(0, n)):
         

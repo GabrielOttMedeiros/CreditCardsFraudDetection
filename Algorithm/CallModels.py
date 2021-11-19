@@ -55,40 +55,40 @@ Y_train = train_data['is_fraud']
 ## Decision Trees
 DTC_results = em.DecisionTreesResults(X_test, X_train, Y_test, Y_train)
 DTC_best_model = em.DecisionTreesBestModel(DTC_results)
-DTC_results.to_csv('CreditCardsFraudDetection/Algorithm/DTC_results.csv', index = False)
-DTC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/DTC_best_model.csv', index = False)
+DTC_results.to_csv('DTC_results.csv', index = False)
+DTC_best_model.to_csv('DTC_best_model.csv', index = False)
 
 ## Random Forest
 RF_results = em.RandomForestResults(X_test, X_train, Y_test, Y_train)
 RF_best_model = em.DecisionTreesBestModel(RF_results)
-RF_results.to_csv('CreditCardsFraudDetection/Algorithm/RF_results.csv', index = False)
-RF_best_model.to_csv('CreditCardsFraudDetection/Algorithm/RF_best_model.csv', index = False)
+RF_results.to_csv('RF_results.csv', index = False)
+RF_best_model.to_csv('RF_best_model.csv', index = False)
 
 ## Neural Networks
 NN_results = em. NeuralNetworksResults(X_test, X_train, Y_test, Y_train)
-NN_results.to_csv('CreditCardsFraudDetection/Algorithm/NN_results.csv', index = False)
+NN_results.to_csv('NN_results.csv', index = False)
 
 ## SVC
 SVC_results = em.SupportVectorMachineResults(X_test, X_train, Y_test, Y_train)
 SVC_best_model = em.SvcBestModel(SVC_results)
-SVC_results.to_csv('CreditCardsFraudDetection/Algorithm/SVC_results.csv', index = False)
-SVC_best_model.to_csv('CreditCardsFraudDetection/Algorithm/SVC_best_model.csv', index = False)
+SVC_results.to_csv('SVC_results.csv', index = False)
+SVC_best_model.to_csv('SVC_best_model.csv', index = False)
 
 ## Logistic Regression
 LR_results = em.LogisticRegressionResults(X_test, X_train, Y_test, Y_train)
-LR_results.to_csv('CreditCardsFraudDetection/Algorithm/LR_results.csv', index = False)
+LR_results.to_csv('LR_results.csv', index = False)
 
 ## AdaBoost Decision Trees
 ADA_DTC = em.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, DTC_best_model)
-ADA_DTC.to_csv('CreditCardsFraudDetection/Algorithm/ADA_DTC.csv', index = False)
+ADA_DTC.to_csv('ADA_DTC.csv', index = False)
 
 ## AdaBoost SVC
 ADA_SVC= em.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
-ADA_SVC.to_csv('CreditCardsFraudDetection/Algorithm/ADA_SVC.csv', index = False)
+ADA_SVC.to_csv('ADA_SVC.csv', index = False)
 
 ## GradientBoosting
 GBC_results = em.GradientBoostingResults(X_test, X_train, Y_test, Y_train)
-GBC_results.to_csv('CreditCardsFraudDetection/Algorithm/GBC_results.csv', index = False)
+GBC_results.to_csv('GBC_results.csv', index = False)
 
 
 
