@@ -44,6 +44,8 @@ X, Y = train_data.drop(columns = 'is_fraud'), train_data['is_fraud']
 import Get_Variable_Importance as gvi
 
 df_importance_columns = gvi.Importance(X,Y)
+df_importance_columns.to_csv('FinalData.csv', index = False)
+
 
 X_test = test_data[df_importance_columns.drop(columns = 'is_fraud').columns]
 Y_test = test_data['is_fraud']
@@ -52,21 +54,21 @@ X_train = train_data[df_importance_columns.drop(columns = 'is_fraud').columns]
 Y_train = train_data['is_fraud']
 
 
-## Decision Trees
-DTC_results = em.DecisionTreesResults(X_test, X_train, Y_test, Y_train)
-DTC_best_model = em.DecisionTreesBestModel(DTC_results)
-DTC_results.to_csv('DTC_results.csv', index = False)
-DTC_best_model.to_csv('DTC_best_model.csv', index = False)
+# ## Decision Trees
+# DTC_results = em.DecisionTreesResults(X_test, X_train, Y_test, Y_train)
+# DTC_best_model = em.DecisionTreesBestModel(DTC_results)
+# DTC_results.to_csv('DTC_results.csv', index = False)
+# DTC_best_model.to_csv('DTC_best_model.csv', index = False)
 
-## Random Forest
-RF_results = em.RandomForestResults(X_test, X_train, Y_test, Y_train)
-RF_best_model = em.DecisionTreesBestModel(RF_results)
-RF_results.to_csv('RF_results.csv', index = False)
-RF_best_model.to_csv('RF_best_model.csv', index = False)
+# ## Random Forest
+# RF_results = em.RandomForestResults(X_test, X_train, Y_test, Y_train)
+# RF_best_model = em.DecisionTreesBestModel(RF_results)
+# RF_results.to_csv('RF_results.csv', index = False)
+# RF_best_model.to_csv('RF_best_model.csv', index = False)
 
-## Neural Networks
-NN_results = em. NeuralNetworksResults(X_test, X_train, Y_test, Y_train)
-NN_results.to_csv('NN_results.csv', index = False)
+# ## Neural Networks
+# NN_results = em. NeuralNetworksResults(X_test, X_train, Y_test, Y_train)
+# NN_results.to_csv('NN_results.csv', index = False)
 
 ## SVC
 SVC_results = em.SupportVectorMachineResults(X_test, X_train, Y_test, Y_train)
@@ -79,6 +81,7 @@ LR_results = em.LogisticRegressionResults(X_test, X_train, Y_test, Y_train)
 LR_results.to_csv('LR_results.csv', index = False)
 
 ## AdaBoost Decision Trees
+DTC_best_model = pd.read_csv('DTC_best_model.csv')
 ADA_DTC = em.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, DTC_best_model)
 ADA_DTC.to_csv('ADA_DTC.csv', index = False)
 
