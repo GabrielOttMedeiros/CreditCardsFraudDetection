@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import EvaluateModels as em
+from sklearn.model_selection import train_test_split
 import boto3
 
 ## defining bucket
@@ -40,18 +41,28 @@ test_data = test_data.dropna()
 ## Here we define the target and predictor variables for our Variable Importance extractor
 X, Y = train_data.drop(columns = 'is_fraud'), train_data['is_fraud']
 
-## Here we call our variable importance model and its results 
-import Get_Variable_Importance as gvi
+X_train_sample, X_test_sample, Y_train_sample, Y_test_sample = train_test_split(X, Y, test_size = 0.1, stratify = Y)
 
-df_importance_columns = gvi.Importance(X,Y)
-df_importance_columns.to_csv('FinalData.csv', index = False)
+X_train_final, X_test_final, Y_train_final, Y_test_final = train_test_split(X_test_sample,
+                                                                            Y_test_sample, 
+                                                                            test_size = 0.2, 
+                                                                            stratify = Y_test_sample)
 
 
-X_test = test_data[df_importance_columns.drop(columns = 'is_fraud').columns]
-Y_test = test_data['is_fraud']
+# ## Here we call our variable importance model and its results 
+# import Get_Variable_Importance as gvi
 
-X_train = train_data[df_importance_columns.drop(columns = 'is_fraud').columns]
-Y_train = train_data['is_fraud']
+# df_importance_columns = gvi.Importance(X_test_sample,Y_test_sample)
+# df_importance_columns.to_csv('FinalData.csv', index = False)
+
+df_importance_columns = pd.read_csv('FinalData.csv')
+
+
+X_test = X_test_final[df_importance_columns.drop(columns = 'is_fraud').columns]
+Y_test = Y_test_final
+
+X_train = X_train_final[df_importance_columns.drop(columns = 'is_fraud').columns]
+Y_train = Y_train_final
 
 
 # ## Decision Trees
@@ -71,14 +82,14 @@ Y_train = train_data['is_fraud']
 # NN_results.to_csv('NN_results.csv', index = False)
 
 ## SVC
-SVC_results = em.SupportVectorMachineResults(X_test, X_train, Y_test, Y_train)
-SVC_best_model = em.SvcBestModel(SVC_results)
-SVC_results.to_csv('SVC_results.csv', index = False)
-SVC_best_model.to_csv('SVC_best_model.csv', index = False)
+# SVC_results = em.SupportVectorMachineResults(X_test, X_train, Y_test, Y_train)
+# SVC_best_model = em.SvcBestModel(SVC_results)
+# SVC_results.to_csv('SVC_results.csv', index = False)
+# SVC_best_model.to_csv('SVC_best_model.csv', index = False)
 
-## Logistic Regression
-LR_results = em.LogisticRegressionResults(X_test, X_train, Y_test, Y_train)
-LR_results.to_csv('LR_results.csv', index = False)
+# ## Logistic Regression
+# LR_results = em.LogisticRegressionResults(X_test, X_train, Y_test, Y_train)
+# LR_results.to_csv('LR_results.csv', index = False)
 
 ## AdaBoost Decision Trees
 DTC_best_model = pd.read_csv('DTC_best_model.csv')
@@ -86,16 +97,10 @@ ADA_DTC = em.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, DTC_
 ADA_DTC.to_csv('ADA_DTC.csv', index = False)
 
 ## AdaBoost SVC
+SVC_best_model = pd.read_csv('SVC_best_model.csv')
 ADA_SVC= em.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
 ADA_SVC.to_csv('ADA_SVC.csv', index = False)
 
 ## GradientBoosting
 GBC_results = em.GradientBoostingResults(X_test, X_train, Y_test, Y_train)
 GBC_results.to_csv('GBC_results.csv', index = False)
-
-
-
-
-
-
-
