@@ -92,14 +92,14 @@ Y_train = Y_train_final
 # LR_results.to_csv('LR_results.csv', index = False)
 
 ## AdaBoost Decision Trees
-DTC_best_model = pd.read_csv('DTC_best_model.csv')
-ADA_DTC = em.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, DTC_best_model)
-ADA_DTC.to_csv('ADA_DTC.csv', index = False)
+# DTC_best_model = pd.read_csv('DTC_best_model.csv')
+# ADA_DTC = em.AdaBoostDecisionTreesResults(X_test, X_train, Y_test, Y_train, DTC_best_model)
+# ADA_DTC.to_csv('ADA_DTC.csv', index = False)
 
-## AdaBoost SVC
-SVC_best_model = pd.read_csv('SVC_best_model.csv')
-ADA_SVC= em.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
-ADA_SVC.to_csv('ADA_SVC.csv', index = False)
+# ## AdaBoost SVC
+# SVC_best_model = pd.read_csv('SVC_best_model.csv')
+# ADA_SVC= em.AdaBoostSvmResults(X_test, X_train, Y_test, Y_train, SVC_best_model)
+# ADA_SVC.to_csv('ADA_SVC.csv', index = False)
 
 ## GradientBoosting
 GBC_results = em.GradientBoostingResults(X_test, X_train, Y_test, Y_train)
