@@ -1,2 +1,0 @@
-max_depth,n_estimators,cut_off,accuracy,recall,Performance
-10,400,0.05,0.9781482721261793,0.8184410646387833,0.8911961090173928
