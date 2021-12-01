@@ -1,3 +1,5 @@
+## This file creates dataframes for all possible combinations of hyper-parameters for the considered models
+
 import pandas as pd
 import numpy as np
 
@@ -64,10 +66,10 @@ def NeuralNetworksHyperParameters():
     number_of_neurons = np.arange(2,11,1)
     
     ## Activation funciton 1
-    activation = ['relu','tanh'] ## What else?
+    activation = ['relu','tanh']
 
     ## Activation funciton 2
-    activation2 = ['softmax'] ## What else?
+    activation2 = ['softmax']
 
     ## Optmizer
     optimizer = ['sgd']
@@ -118,6 +120,7 @@ def NeuralNetworksHyperParameters():
 #########
 ## SVM ##
 #########
+
 def SvmHyperParameters():
     
     ## Here we list the kernels we want to use
@@ -139,6 +142,7 @@ def SvmHyperParameters():
 #########################
 ## Logistic Regression ##
 #########################
+
 def LogisticRegressionParameters():
     
     ## Here we return a list of cut offs
@@ -150,7 +154,7 @@ def AdaBoostHyperParameters():
     learning_rate_list = [0.01,0.1,1,10]
     n_estimators = np.arange(200,1200,200)
     
-    ## Here we create empty lists to append the reuslts
+    ## Here we create empty lists to append the results
     lr_to_append = []
     estimators_to_append = []
 
@@ -170,6 +174,7 @@ def AdaBoostHyperParameters():
 ######################
 ## GradientBoosting ##
 ######################
+
 def GradientBoostingHyperParameters():
     
     ## Here we define a range for our hyper parameters
@@ -177,7 +182,7 @@ def GradientBoostingHyperParameters():
     n_estimators = np.arange(200,1200,200)
     max_depth = max_depth = np.arange(3,11,1)
     
-    ## Here we create empty lists to append the reuslts
+    ## Here we create empty lists to append the results
     lr_to_append = []
     estimators_to_append = []
     depth_to_append = []
