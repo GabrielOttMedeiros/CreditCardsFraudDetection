@@ -73,7 +73,7 @@ def Extract_Decision_Tree_Importance(X, Y, data):
     DTC_results = pd.DataFrame(columns = ['Depth', 'Threshold', 'Acc.', 'Rec.', 'Importances'],
                               data = list_results)
 
-    ## Creating the performance variable: the average of accuracy and recall
+    ## Creating the performance variable: the harmonic average of accuracy and recall
     DTC_results['Performance'] = 2 / ((1/DTC_results['Acc.']) + (1/DTC_results['Rec.']))
     
     ## Storing the model with the best performance
@@ -125,7 +125,7 @@ def Extract_Random_Forest_Importance(X, Y, data):
     RFC_results = pd.DataFrame(columns = ['Depth', 'Estimators', 'Threshold', 'Acc.', 'Rec.', 'Importances'], 
                                data = list_results)
 
-    ## Creating the performance variable: the average of accuracy and recall
+    ## Creating the performance variable: the harmonic average of accuracy and recall
     RFC_results['Performance'] = 2 / ((1/RFC_results['Acc.']) + (1/RFC_results['Rec.']))
     
     ## Storing the model with the best performance
